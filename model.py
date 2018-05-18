@@ -25,7 +25,6 @@ class netG(nn.Module):
 
     def __init__(self, args):
         super(netG, self).__init__()
-        self.ngpu = args.ngpu
         nz = args.nz
         ngf = args.ngf
         nc = args.nc
@@ -77,10 +76,7 @@ class netG(nn.Module):
         weights_init(self)
 
     def forward(self, x):
-        if isinstance(x.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            y = nn.parallel.data_parallel(self.main, x, range(self.ngpu))
-        else:
-            y = self.main(x)
+        y = self.main(x)
         return y
 
 
@@ -88,7 +84,6 @@ class netD(nn.Module):
 
     def __init__(self, args):
         super(netD, self).__init__()
-        self.ngpu = args.ngpu
         ndf = args.ndf
         nc = args.nc
         self.main = nn.Sequential(
@@ -139,8 +134,5 @@ class netD(nn.Module):
         weights_init(self)
 
     def forward(self, x):
-        if isinstance(x.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            y = nn.parallel.data_parallel(self.main, x, range(self.ngpu))
-        else:
-            y = self.main(x)
+        y = self.main(x)
         return y.view(-1, 1).squeeze(1)

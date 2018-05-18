@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -117,7 +118,7 @@ class Trainer(object):
 
     def train(self):
         args = self.args
-        for i_epoch in range(1, args.epoch + 1):
+        for i_epoch in tqdm(range(1, args.epoch + 1)):
             D_G_z1_list = []
             D_G_z2_list = []
             error_D_list = []
